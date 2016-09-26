@@ -3,7 +3,7 @@ c3.8xlarge Weak Scaling tests:
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 4000 BLOCKS PER VCPU:
-
+////////////////////////////////////////////////////////////////////
 1 node (32 VCPUs):
 n = 16: Cut 128000 blocks in 26329.412428 msec.
     	Cut 128000 blocks in 26340.488026 msec.
@@ -35,9 +35,28 @@ Max volume: 1280.00
 Min volume: 1280.00
 
 /////////////////////////////////////////////////////////////////////
+2 node (64VCPUs):
+n = 32: Cut 256000 blocks in 86970.937838 msec.
+    	Cut 256000 blocks in 82466.91913 msec.
+Number of partitions: 34
+Average Volume: 7529.41
+Max volume: 7680.00
+Min volume: 2560.00
+
+n = 64: Cut 256000 blocks in 48346.724144 msec.
+    	Cut 256000 blocks in 47733.556302 msec.
+	Cut 256000 blocks in 50175.257338 msec.
+Number of partitions: 67
+Average Volume: 3820.90
+Max volume: 3840.00
+Min volume: 2560.00
+
+n = 128: TAKES FOREVER TO EVEN GET STARTED...
+
+/////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 32000 BLOCKS PER VCPU
-
+/////////////////////////////////////////////////////////////////////
 1 node(32 VCPUs):
 n = 16: Cut 1024000 blocks in 349471.998773 msec.
     	Cut 1024000 blocks in 350694.558455 msec.
@@ -70,9 +89,34 @@ Min volume: 2560.00
 n = 256: TAKES FOREVER TO EVEN START!!!!
 
 /////////////////////////////////////////////////////////////////////
+2 node (64VCPUs):
+n = 32: Cut 2048000 blocks in 878309.51204 msec.
+    	Cut 2048000 blocks in 890254.253926 msec.
+Number of partitions: 34
+Average Volume: 60235.29
+Max volume: 61440.00
+Min volume: 20480.00
+
+n = 64: Cut 2048000 blocks in 722381.34324 msec.
+    	Cut 2048000 blocks in 719505.074786 msec.
+Number of partitions: 67
+Average Volume: 30567.16
+Max volume: 30720.00
+Min volume: 20480.00
+
+n = 128: Cut 2048000 blocks in 382445.07502 msec.
+    	 Cut 2048000 blocks in 368479.227709 msec.
+Number of partitions: 134
+Average Volume: 15283.58
+Max volume: 15360.00
+Min volume: 5120.00
+
+n = 256: TAKES FOREVER TO EVEN START!!!!
+
+/////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 64000 BLOCKS PER VCPU
-
+/////////////////////////////////////////////////////////////////////
 1 node(32 VCPUs)
 n = 16: Cut 2048000 blocks in 703679.427132 msec.
 Number of partitions: 16
@@ -81,8 +125,16 @@ Max volume: 128000.00
 Min volume: 128000.00
 
 n = 32: CAUSES STACK OVERFLOW IMMEDIATELY AFTER GENERATING SEED BLOCKS
+    	PERHAPS THIS IS GETTING TOO LARGE FOR A SINGLE VCPU?
 Number of partitions: 35
 Average Volume: 58514.29
 Max volume: 64000.00
 Min volume: 40960.00
 
+/////////////////////////////////////////////////////////////////////
+2 node (64VCPUs):
+n = 32: CAUSES STACK OVERFLOW IMMEDIATELY AFTER GENERATING SEED BLOCKS
+Number of partitions: 35
+Average Volume: 117028.57
+Max volume: 128000.00
+Min volume: 81920.00
