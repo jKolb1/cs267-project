@@ -1,0 +1,7 @@
+Instance Type	VCPUs	ECUs	Number of Nodes	Number of Blocks	Requested Partitions	Actual Partitions	Min Volume	Max Volume	Average Volume	Running Time (msec.)
+c3.8xlarge	32	108	1	256000	1					
+c3.8xlarge	32	108	1	256000	4					
+c3.8xlarge	32	108	1	256000	8					
+c3.8xlarge	32	108	1	256000	32					
+c3.8xlarge	32	108	1	256000	64					
+c3.8xlarge	32	108	1	256000	128					
