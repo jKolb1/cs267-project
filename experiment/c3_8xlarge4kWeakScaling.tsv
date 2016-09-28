@@ -1,0 +1,6 @@
+Instance Type,VCPUs,ECUs,Number of Nodes,Number of Blocks,Requested Partitions,Actual Partitions,Min Volume,Max Volume,Average Volume,Running Time (msec.)
+c3.8xlarge,32,108,1,4000,1,1,4000,4000,4000,166576.536075
+c3.8xlarge,32,108,1,4000,4,5,600,2000,1600,23503.566336
+c3.8xlarge,32,108,1,4000,8,9,700,1000,888.89,15867.888049
+c3.8xlarge,32,108,1,4000,32,34,80,240,235.29,9508.8616
+c3.8xlarge,32,108,1,4000,64,441,1,20,18.14,10717.344876
