@@ -152,7 +152,7 @@ object Block {
                          center: Array[Double]): Boolean = {
     // Check that points are in the same x-y plane
     if (math.abs(NumericUtils.roundToTolerance(pointA(2)) -
-      NumericUtils.roundToTolerance(pointB(2))) > NumericUtils.EPSILON) {
+      NumericUtils.roundToTolerance(pointB(2))) > 10*NumericUtils.EPSILON) {
       throw new IllegalArgumentException("ERROR: Input to Block.ccwCompare: " +
         "Input points are not in the same plane")
     }
@@ -284,7 +284,17 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
         val rhs = NumericUtils.applyTolerance(face.d)
         linProg.addConstraint(coeffs, LinearProgram.LE, rhs)
       }
-      val results = linProg.solve().get._1
+      val resultsSolution = linProg.solve()
+      if (resultsSolution.isEmpty) {
+        println("Unbounded solution!!")
+        println(s"Block center: $centerX, $centerY, $centerZ")
+        println(s"Max inscribeable radius: $maxInscribableRadius")
+        faces.foreach { face =>
+          println(s"Normal vector: ${face.a}, ${face.b}, ${face.c}")
+          println(s"Distance: ${face.d}")
+        }
+      }
+      val results = resultsSolution.get._1
       val resultsSeq = Seq[Double](results(0), results(1), results(2))
       resultsSeq match {
         case Nil => 0.0
@@ -486,12 +496,14 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
     * This function should only be called once all redundant faces have been removed.
     */
   def calcVertices: Map[Face, Seq[Array[Double]]] = {
-    faces.zip (
-      faces map { f1 =>
+    val relevantFaces = nonRedundantFaces
+
+    val faceVertexMap = relevantFaces.zip (
+      relevantFaces map { f1 =>
         val n1 = DenseVector[Double](f1.a, f1.b, f1.c)
-        faces flatMap { f2 =>
+        relevantFaces flatMap { f2 =>
           val n2 = DenseVector[Double](f2.a, f2.b, f2.c)
-          faces flatMap { f3 =>
+          relevantFaces flatMap { f3 =>
             val n3 = DenseVector[Double](f3.a, f3.b, f3.c)
             // Check if normals of faces are coplanar, if not find intersection
             if (math.abs(n1 dot linalg.cross(n2, n3)) > NumericUtils.EPSILON) {
@@ -512,6 +524,10 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
         }
       } map (_.distinct) map {seq => seq map { triple => Array(triple._1, triple._2, triple._3) } }
     ).toMap
+
+    faceVertexMap.filter { case (face, vertices) =>
+        vertices.length > 2
+    }
   }
 
   /**
@@ -613,9 +629,30 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
     */
   private def findVolume: Double = {
     val faceVertexMap = orientedVertices
+//
+//    if (faceVertexMap.keys.toList.length < 4) {
+//      println(s"TOO FEW FACES: ${faceVertexMap.keys.toList.length}")
+//    }
 
     val volIncrements = faceVertexMap.flatMap { case (face, faceVertices) =>
       // Tetrahedra are constructed using three vertices at a time
+//      if (faceVertices.length < 3) {
+//        println("TOO FEW VERTICES!!!!")
+//        println("For this face:")
+//        println(s"Normal: ${face.a}, ${face.b}, ${face.c}")
+//        println(s"Distance: ${face.d}")
+//        println("These are the vertices:")
+//        faceVertices.foreach { vertex =>
+//          println(s"${vertex(0)}, ${vertex(1)}, ${vertex(2)}")
+//        }
+//        println("These are the block faces:")
+//        faceVertexMap.keys.foreach { blockFace =>
+//          println(s"Normal: ${blockFace.a}, ${blockFace.b}, ${blockFace.c}")
+//          println(s"Distance: ${blockFace.d}")
+//        }
+//        println(s"Block center: $centerX, $centerY, $centerZ")
+//      }
+
       faceVertices.sliding(3).map { case Seq(vertex1, vertex2, vertex3) =>
         // Initialize Jacobian matrix
         val Jacobian = DenseMatrix(
@@ -662,6 +699,16 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
       }
 
       val n = DenseVector[Double](a, b, c)
+      if (!(n dot w).isInstanceOf[scala.Double]) {
+        println(s"NOT A DOUBLE!! Offending value: ${n dot w}")
+        println(s"Here is w: ${w(0)}, ${w(1)}, ${w(2)}")
+        if ((n dot w).isNaN) {
+          println("It is Not a Number")
+        }
+        if ((n dot w).isInfinity) {
+          println("It is infinity")
+        }
+      }
       val new_d = NumericUtils.roundToTolerance(-(n dot w) / linalg.norm(n))
       Face(Array(a, b, c), new_d, phi, cohesion)
     }

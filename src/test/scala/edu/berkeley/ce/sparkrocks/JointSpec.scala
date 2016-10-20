@@ -235,7 +235,7 @@ class JointSpec extends FunSuite {
     val joint = Joint(Array(1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0), localOrigin = Array(0.0, 0.0, 0.0),
                       center = Array(1.0, 0.0, 0.0), phi = 0.0, cohesion = 0.0, shape = Vector.empty)
     val newJoint = joint.updateJoint(Array(0.0, 0.0, 0.0))
-    assert(math.abs(newJoint.d - 1.0/sqrt(2.0)) < NumericUtils.EPSILON)
+    assert(math.abs(newJoint.d - 1.0/sqrt(2.0)) < 3 * NumericUtils.EPSILON)
   }
 
   test("Oblique joint should have updated distance of 0.0") {
