@@ -454,6 +454,7 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
           val inscribedRadiusA = childBlockA.maxInscribableRadius
           val inscribedRadiusB = childBlockB.maxInscribableRadius
           if (inscribedRadiusA < minSize || inscribedRadiusB < minSize) {
+            println("Suok on this")
             childBlocks = Vector(this)
           }
         }
@@ -462,6 +463,7 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
           val aspectRatioA = childBlockA.sphereRadius / childBlockA.maxInscribableRadius
           val aspectRatioB = childBlockB.sphereRadius / childBlockB.maxInscribableRadius
           if (aspectRatioA > maxAspectRatio || aspectRatioB > maxAspectRatio) {
+            println("Yes please")
             childBlocks = Vector(this)
           }
         }
@@ -616,6 +618,26 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
           (centX1 + centX2, centY1 + centY2, centZ1 + centZ2)
       }
 
+      val centroid = Array(centroidX / (volume * 24.0) + centerX,
+        centroidY / (volume * 24.0) + centerY,
+        centroidZ / (volume * 24.0) + centerZ)
+
+      if (centroid.exists(_.isNaN) || centroid.exists(_.isInfinity) || centroid.exists(!_.isInstanceOf[Double])) {
+        println("CENTROID IS MESSED UP!")
+        println(s"Centroid: $centroidX, $centroidY, $centroidZ")
+        println(s"Block center: $centerX, $centerY, $centerZ")
+        println("Faces:")
+        faceVertexMap.foreach { case (face, vertices) =>
+          println(s"Face Normal: ${face.a}, ${face.b}, ${face.c}")
+          println(s"Distance: ${face.d}")
+          println("Vertices:")
+          vertices.foreach { vertex =>
+            println(s"${vertex(0)}, ${vertex(1)}, ${vertex(2)}")
+          }
+          println()
+        }
+      }
+
       Array(centroidX / (volume * 24.0) + centerX,
         centroidY / (volume * 24.0) + centerY,
         centroidZ / (volume * 24.0) + centerZ)
@@ -699,16 +721,25 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
       }
 
       val n = DenseVector[Double](a, b, c)
+
       if (!(n dot w).isInstanceOf[scala.Double]) {
         println(s"NOT A DOUBLE!! Offending value: ${n dot w}")
         println(s"Here is w: ${w(0)}, ${w(1)}, ${w(2)}")
-        if ((n dot w).isNaN) {
-          println("It is Not a Number")
-        }
-        if ((n dot w).isInfinity) {
-          println("It is infinity")
-        }
       }
+
+      if ((n dot w).isNaN) {
+        println(s"NOT A NUMBER! Offending value: ${n dot w}")
+        println(s"Here is w: ${w(0)}, ${w(1)}, ${w(2)}")
+        println(s"Local Origin: ${localOrigin(0)}, ${localOrigin(1)}, ${localOrigin(2)}")
+        println(s"Face Normal: $a, $b, $c")
+        println(s"Face Distance: $d")
+      }
+
+      if ((n dot w).isInfinity) {
+        println(s"INFINITY!! Offending value: ${n dot w}")
+        println(s"Here is w: ${w(0)}, ${w(1)}, ${w(2)}")
+      }
+
       val new_d = NumericUtils.roundToTolerance(-(n dot w) / linalg.norm(n))
       Face(Array(a, b, c), new_d, phi, cohesion)
     }

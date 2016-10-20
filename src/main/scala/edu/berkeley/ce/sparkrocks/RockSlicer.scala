@@ -94,10 +94,37 @@ object RockSlicer {
     }.cache()
 
     val centroidBlocks = nonRedundantBlocks.map { block =>
-      val centroid = block.centroid
-      val updatedFaces = block.updateFaces(centroid)
-      Block(centroid, updatedFaces)
-    }
+      if (block.faces.nonEmpty) {
+        val centroid = block.centroid
+
+        if (centroid.exists(_.isInfinity) || centroid.exists(_.isNaN)) {
+          println("CENTROID IS MESSED UP!")
+          println(s"Centroid: ${centroid(0)}, ${centroid(1)}, ${centroid(2)}")
+          println(s"Block center: ${block.centerX}, ${block.centerY}, ${block.centerZ}")
+          println(s"Faces not empty?: ${block.faces.nonEmpty}")
+          println("Faces (prior to vertex calcs:")
+          block.faces.foreach { face =>
+            println(s"Normal: ${face.a}, ${face.b}, ${face.c}")
+            println(s"Distance: ${face.d}")
+          }
+          val faceVertexMap = block.orientedVertices
+          faceVertexMap.foreach { case (face, vertices) =>
+            println(s"Face Normal: ${face.a}, ${face.b}, ${face.c}")
+            println(s"Distance: ${face.d}")
+            println("Vertices:")
+            vertices.foreach { vertex =>
+              println(s"${vertex(0)}, ${vertex(1)}, ${vertex(2)}")
+            }
+            println()
+          }
+        }
+
+        val updatedFaces = block.updateFaces(centroid)
+        Block(centroid, updatedFaces)
+      } else {
+        None
+      }
+    }.collect{ case block: Block => block}
 
     // Clean up faces of real blocks with values that should be zero, but have arbitrarily
     // small floating point values
