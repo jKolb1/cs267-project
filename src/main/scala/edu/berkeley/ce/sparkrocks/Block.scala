@@ -408,8 +408,7 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
     * or aspect ratio are met. Otherwise, returns a one-item Seq containing
     * only this block.
     */
-  def cut(joint: Joint, minSize: Double=0.0, maxAspectRatio: Double=Double.PositiveInfinity,
-          generation: Int=0): Seq[Block] = {
+  def cut(joint: Joint, minSize: Double, maxAspectRatio: Double, generation: Int=0): Seq[Block] = {
     val translatedJoint = joint.updateJoint(Array(centerX, centerY, centerZ))
     this.intersects(translatedJoint) match {
       case None => Vector(this)
