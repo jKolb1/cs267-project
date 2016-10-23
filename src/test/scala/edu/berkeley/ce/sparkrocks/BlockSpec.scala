@@ -394,7 +394,6 @@ class BlockSpec extends FunSuite {
     val block = Block(Array(1.0, 1.0, 1.0), List(face1, face2, face3))
     val expectedIntersection = Map(
       face1 -> List.empty[Array[Double]],
-      face2 -> List.empty[Array[Double]],
       face3 -> List.empty[Array[Double]]
     )
     val vertices = block.calcVertices

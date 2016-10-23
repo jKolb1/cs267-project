@@ -94,7 +94,15 @@ object RockSlicer {
       }
     }.cache()
 
-    val centroidBlocks = nonRedundantBlocks.map { block =>
+    val vertexBlocks = nonRedundantBlocks.map { case block @ Block(center, _, generation) =>
+      val faceVertexMap = block.calcVertices
+      val relevantFacesMap = faceVertexMap.filter { case (face, vertices) =>
+          vertices.length > 2
+      }
+      Block(center, relevantFacesMap.keys.toSeq, generation)
+    }
+
+    val centroidBlocks = vertexBlocks.map { block =>
       val centroid = block.centroid
       val updatedFaces = block.updateFaces(centroid)
       Block(centroid, updatedFaces)
