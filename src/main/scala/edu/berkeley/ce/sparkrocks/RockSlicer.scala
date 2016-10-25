@@ -35,6 +35,7 @@ object RockSlicer {
     val (globalOrigin, boundingBox, rockVolumeInputs, jointSetInputs) = inputOpt.get
     val generatedInput = JointGenerator(globalOrigin, boundingBox, rockVolumeInputs, jointSetInputs)
     val starterBlocks = Seq(Block(globalOrigin, generatedInput.rockVolume))
+    val initialVolume = starterBlocks.head.volume
 
     val startTime = System.nanoTime()
     // Generate a list of initial blocks before RDD-ifying it
@@ -94,15 +95,7 @@ object RockSlicer {
       }
     }.cache()
 
-    val vertexBlocks = nonRedundantBlocks.map { case block @ Block(center, _, generation) =>
-      val faceVertexMap = block.calcVertices
-      val relevantFacesMap = faceVertexMap.filter { case (face, vertices) =>
-          vertices.length > 2
-      }
-      Block(center, relevantFacesMap.keys.toSeq, generation)
-    }
-
-    val centroidBlocks = vertexBlocks.map { block =>
+    val centroidBlocks = nonRedundantBlocks.map { block =>
       val centroid = block.centroid
       val updatedFaces = block.updateFaces(centroid)
       Block(centroid, updatedFaces)
@@ -117,6 +110,9 @@ object RockSlicer {
     val totalNumBlocks = squeakyClean.count()
     val endTime = System.nanoTime()
     println(s"Cut $totalNumBlocks blocks in ${(endTime - startTime) / 1.0e6} msec.")
+    val totalVolume = squeakyClean.map(_.volume).sum()
+    println(s"Original Volume: $initialVolume")
+    println(s"Summer Final Volume: $totalVolume")
 
     // Convert list of rock blocks to requested output
     if (arguments.jsonOut != "") {
