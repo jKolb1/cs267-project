@@ -676,22 +676,22 @@ class BlockSpec extends FunSuite {
     assert(centroidComparison < NumericUtils.EPSILON)
   }
 
-  test("Which face is redundant?!?!?!") {
-    val strangeFaces = List(
-      Face(Array(0.6508952239913499, -0.6508952239913496, 0.3907311284892737), 0.165135, phi=0, cohesion=0), // -x = 0
-      Face(Array(-0.3659981507706668, -0.21130913087034978, 0.90630778703665), 0.165134, phi=0, cohesion=0), // x = 2
-      Face(Array(0.7044160264027586, 0.7044160264027588, 0.08715574274765836), 0.0, phi=0, cohesion=0), // -y = 0
-      Face(Array(-0.37157241273869723, 0.33456530317942895, 0.8660254037844387), 0.290657, phi=0, cohesion=0), // y = 2
-      Face(Array(-0.0, -1.0, -0.0), 0.225269, phi=0, cohesion=0), // -z = 0
-      Face(Array(-0.6762095778224088, -0.6762095778224089, 0.29237170472273677), 0.834865, phi=0, cohesion=0), // z = 2
-      Face(Array(0.3659981507706668, 0.21130913087034978, -0.90630778703665), 0.334866, phi=0, cohesion=0),
-      Face(Array(0.37157241273869723, -0.33456530317942895, -0.8660254037844387), 0.209343, phi=0, cohesion=0),
-      Face(Array(-0.6508952239913499, 0.6508952239913496, -0.3907311284892737), 0.834864, phi=0, cohesion=0),
-      Face(Array(0.6762095778224088, 0.6762095778224089, -0.29237170472273677), 0.165135, phi=0, cohesion=0)
-    )
-    val strangeBlock = Block(Array(98.259472, 0.225269, 7.22593), strangeFaces)
-
-    val nonRedundanFacts = strangeBlock.nonRedundantFaces
-    assert(nonRedundanFacts == strangeFaces)
-  }
+//  test("Which face is redundant?!?!?!") {
+//    val strangeFaces = List(
+//      Face(Array(0.6508952239913499, -0.6508952239913496, 0.3907311284892737), 0.165135, phi=0, cohesion=0), // -x = 0
+//      Face(Array(-0.3659981507706668, -0.21130913087034978, 0.90630778703665), 0.165134, phi=0, cohesion=0), // x = 2
+//      Face(Array(0.7044160264027586, 0.7044160264027588, 0.08715574274765836), 0.0, phi=0, cohesion=0), // -y = 0
+//      Face(Array(-0.37157241273869723, 0.33456530317942895, 0.8660254037844387), 0.290657, phi=0, cohesion=0), // y = 2
+//      Face(Array(-0.0, -1.0, -0.0), 0.225269, phi=0, cohesion=0), // -z = 0
+//      Face(Array(-0.6762095778224088, -0.6762095778224089, 0.29237170472273677), 0.834865, phi=0, cohesion=0), // z = 2
+//      Face(Array(0.3659981507706668, 0.21130913087034978, -0.90630778703665), 0.334866, phi=0, cohesion=0),
+//      Face(Array(0.37157241273869723, -0.33456530317942895, -0.8660254037844387), 0.209343, phi=0, cohesion=0),
+//      Face(Array(-0.6508952239913499, 0.6508952239913496, -0.3907311284892737), 0.834864, phi=0, cohesion=0),
+//      Face(Array(0.6762095778224088, 0.6762095778224089, -0.29237170472273677), 0.165135, phi=0, cohesion=0)
+//    )
+//    val strangeBlock = Block(Array(98.259472, 0.225269, 7.22593), strangeFaces)
+//
+//    val nonRedundanFacts = strangeBlock.nonRedundantFaces
+//    assert(nonRedundanFacts == strangeFaces)
+//  }
 }

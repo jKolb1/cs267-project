@@ -474,7 +474,7 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
         linProg.addConstraint(faceCoeffs, LinearProgram.LE, rhs)
       }
       val s = linProg.solve().get._2
-      math.abs(s - face.d) <= NumericUtils.EPSILON
+      math.abs(s - face.d) < NumericUtils.EPSILON / 2.0
     }
 
   /**
