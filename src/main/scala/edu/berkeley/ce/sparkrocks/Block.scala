@@ -557,20 +557,6 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
   def centroid: Array[Double] = {
     val faceVertexMap = orientedVertices
 
-    if (faceVertexMap.values.exists(_.length < 3)) {
-      println(s"CENTROID CALCS - LESS THAN TWO VERTICES!!!")
-      println(s"Block center: $centerX, $centerY, $centerZ")
-      println("Faces:")
-      faceVertexMap.foreach { case (face, faceVertices) =>
-        println(s"Normal: ${face.a}, ${face.b}, ${face.c}")
-        println(s"Distance: ${face.d}")
-        println("Vertices:")
-        faceVertices.foreach { vertex =>
-          println(s"${vertex(0)}, ${vertex(1)}, ${vertex(2)}")
-        }
-        println()
-      }
-    }
     // Check if block is extremely small
     if (volume <= NumericUtils.EPSILON) {
       // If volume is essentially 0.0, return average of all vertices as centroid
@@ -627,21 +613,6 @@ case class Block(center: Array[Double], faces: Seq[Face], generation: Int=0) ext
     */
   private def findVolume: Double = {
     val faceVertexMap = orientedVertices
-
-    if (faceVertexMap.values.exists(_.length < 3)) {
-      println(s"CENTROID CALCS - LESS THAN TWO VERTICES!!!")
-      println(s"Block center: $centerX, $centerY, $centerZ")
-      println("Faces:")
-      faceVertexMap.foreach { case (face, faceVertices) =>
-        println(s"Normal: ${face.a}, ${face.b}, ${face.c}")
-        println(s"Distance: ${face.d}")
-        println("Vertices:")
-        faceVertices.foreach { vertex =>
-          println(s"${vertex(0)}, ${vertex(1)}, ${vertex(2)}")
-        }
-        println()
-      }
-    }
 
     val volIncrements = faceVertexMap.flatMap { case (face, faceVertices) =>
       // Tetrahedra are constructed using three vertices at a time

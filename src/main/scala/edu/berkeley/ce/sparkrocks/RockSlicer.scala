@@ -110,10 +110,6 @@ object RockSlicer {
     val totalNumBlocks = squeakyClean.count()
     val endTime = System.nanoTime()
     println(s"Cut $totalNumBlocks blocks in ${(endTime - startTime) / 1.0e6} msec.")
-    val totalVolume = squeakyClean.map(_.volume).sum()
-    println(s"Original Volume: $initialVolume")
-    println(s"Summer Final Volume: $totalVolume")
-
     // Convert list of rock blocks to requested output
     if (arguments.jsonOut != "") {
       // Convert the list of rock blocks to JSON and save this to a file
